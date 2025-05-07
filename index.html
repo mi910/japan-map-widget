@@ -17,29 +17,44 @@
   <script>
     am5.ready(function() {
       var root = am5.Root.new("chartdiv");
-
+  
       var chart = root.container.children.push(
         am5map.MapChart.new(root, {
           panX: "none", panY: "none", projection: am5map.geoMercator()
         })
       );
-
+  
       var polygonSeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, {
           geoJSON: am5geodata_japanLow
         })
       );
-
+  
       polygonSeries.mapPolygons.template.setAll({
         tooltipText: "{name}：クリックで詳細へ",
         interactive: true
       });
-
+  
+      // NotionページのURLマップを追加
+      const notionLinks = {
+        "JP-01": "https://www.notion.so/1ec00cf1d7418007bc8ddbae43d8eb4d?pvs=4",
+        "JP-13": "https://www.notion.so/yourworkspace/Tokyo-xxxxxx",
+        "JP-27": "https://www.notion.so/yourworkspace/Osaka-xxxxxx",
+        // 他の都道府県もここに追加
+      };
+  
+      // クリック時に Notion リンクに遷移するように変更
       polygonSeries.mapPolygons.template.events.on("click", function(ev) {
         const id = ev.target.dataItem.dataContext.id;
-        window.open("https://example.com/pref/" + id, "_blank"); // IDに応じたリンク
+        const url = notionLinks[id];
+        if (url) {
+          window.open(url, "_blank");
+        } else {
+          alert("Notionリンクが未設定です: " + id);
+        }
       });
     });
   </script>
+  
 </body>
 </html>
